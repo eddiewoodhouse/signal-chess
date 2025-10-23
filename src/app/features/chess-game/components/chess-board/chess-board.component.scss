@@ -40,7 +40,7 @@
 
     &:nth-child(even of .board-row:nth-child(odd) > &),
     &:nth-child(odd of .board-row:nth-child(even) > &) {
-        background-color: #b58863;
+        background-color: var(--color-darkSquare);;
     }
 
     &.selected {

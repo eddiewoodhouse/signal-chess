@@ -1,8 +1,18 @@
 <div class="game-status">
-  <h2>
-    Current Player:
-    {{ currentPlayer() === PieceColor.White ? "White" : "Black" }}
-  </h2>
+  <div class="status-header">
+    <h2>Current Player:</h2>
+    @if(currentPlayer() === PieceColor.White) {
+    <img
+      [src]="chessGameService.getPieceImage('pawn', 'white')"
+      alt="white
+    chesspiece"
+    />
+    } @else {<img
+      [src]="chessGameService.getPieceImage('pawn', 'black')"
+      alt="white chesspiece"
+    />}
+  </div>
+
   @if (isGameOver()) {
   <div class="check-status">
     <p>Checkmate!</p>
