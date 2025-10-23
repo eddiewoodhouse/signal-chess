@@ -1,36 +1,45 @@
-<section class="theme-switcher">
-  <header class="theme-switcher__header">
-    <h2 class="theme-switcher__title">Theme Settings</h2>
-    <button 
-      class="theme-switcher__dark-mode"
-      [class.theme-switcher__dark-mode--active]="isDarkMode()"
-      (click)="toggleDarkMode()">
-      <span class="sr-only">Toggle Dark Mode</span>
-      <div class="mode-icon-container">
-        <img src="/assets/icons/sun.svg" class="mode-icon mode-icon--sun" alt="" />
-        <img src="/assets/icons/moon.svg" class="mode-icon mode-icon--moon" alt="" />
-      </div>
-    </button>
-  </header>
+<div class="theme-switcher">
+  <button
+    class="theme-switcher__dark-mode"
+    [class.theme-switcher__dark-mode--active]="isDarkMode()"
+    (click)="toggleDarkMode()"
+    aria-label="Toggle Dark Mode"
+  >
+    <img src="/assets/icons/sun.svg" class="mode-icon mode-icon--sun" alt="" />
+    <img
+      src="/assets/icons/moon.svg"
+      class="mode-icon mode-icon--moon"
+      alt=""
+    />
+  </button>
 
-  <div class="theme-switcher__options">
+  <div class="theme-carousel">
     @for (theme of baseThemes(); track theme.id) {
-      <button 
-        class="theme-option" 
-        [class.theme-option--active]="theme.id === currentTheme().id || theme.id + '-dark' === currentTheme().id"
-        (click)="onThemeChange(isDarkMode() ? theme.id + '-dark' : theme.id)">
-        <span class="theme-option__name">{{ theme.name }}</span>
-        <div class="theme-option__preview">
-          <div class="color-grid">
-            <div class="color-box" [style.background-color]="theme.colors.primary"></div>
-            <div class="color-box" [style.background-color]="theme.colors.secondary"></div>
-            <div class="color-box" [style.background-color]="theme.colors.accent"></div>
-            <div class="color-box" [style.background-color]="theme.colors.lightSquare"></div>
-            <div class="color-box" [style.background-color]="theme.colors.darkSquare"></div>
-            <div class="color-box" [style.background-color]="theme.colors.background"></div>
-          </div>
-        </div>
-      </button>
+    <button
+      class="theme-preview"
+      [class.theme-preview--active]="
+        theme.id === currentTheme().id ||
+        theme.id + '-dark' === currentTheme().id
+      "
+      (click)="onThemeChange(isDarkMode() ? theme.id + '-dark' : theme.id)"
+      [attr.aria-label]="'Switch to ' + theme.name + ' theme'"
+    >
+      <div class="theme-preview__colors">
+        <div
+          class="color-dot"
+          [style.background-color]="theme.colors.lightSquare"
+        ></div>
+        <div
+          class="color-dot"
+          [style.background-color]="theme.colors.darkSquare"
+        ></div>
+        <div
+          class="color-dot"
+          [style.background-color]="theme.colors.accent"
+        ></div>
+      </div>
+      <span class="theme-preview__name">{{ theme.name }}</span>
+    </button>
     }
   </div>
-</section>
+</div>

@@ -1,24 +1,31 @@
 <div class="checkmate-modal">
-  @if (isVisible()) {
-    <div class="modal-content">
-      <h2>Checkmate!</h2>
-      <p>Winner: {{ winner() }}</p>
-      <h3>Captured Pieces</h3>
-      <div class="captured-pieces">
-        <div>
-          <h4>White</h4>
-          @for (piece of capturedPieces().white; track piece.type) {
-            <div>{{ piece.type }}</div>
-          }
-        </div>
-        <div>
-          <h4>Black</h4>
-          @for (piece of capturedPieces().black; track piece.type) {
-            <div>{{ piece.type }}</div>
-          }
-        </div>
+  <div class="modal-content">
+    <h2>Checkmate!</h2>
+    <p>Winner: {{ winner() }}</p>
+    <h3>Captured Pieces</h3>
+    <div class="captured-pieces">
+      <div>
+        <h4>White</h4>
+        @for (piece of chessGameService.capturedPieces().white; track
+        piece.type) {
+        <img
+          [src]="chessGameService.getPieceImage(piece.type, piece.color)"
+          alt="{{ piece.color }} {{ piece.type }}"
+        />
+        }
       </div>
-      <button (click)="retry()">Retry</button>
+      <div>
+        <h4>Black</h4>
+        @for (piece of chessGameService.capturedPieces().black; track
+        piece.type) {
+        <img
+          [src]="chessGameService.getPieceImage(piece.type, piece.color)"
+          alt="{{ piece.color }} {{ piece.type }}"
+        />
+
+        }
+      </div>
     </div>
-  }
+    <button (click)="retry()">Retry</button>
+  </div>
 </div>

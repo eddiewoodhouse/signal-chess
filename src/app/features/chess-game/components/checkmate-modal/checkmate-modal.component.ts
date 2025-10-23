@@ -1,5 +1,10 @@
-import { Component, Signal, signal } from '@angular/core';
-import { Piece, PieceColor } from '../../../../shared/types/chess.types';
+import { Component, inject, Signal, signal } from '@angular/core';
+import {
+  Piece,
+  PieceColor,
+  PieceType,
+} from '../../../../shared/types/chess.types';
+import { ChessGameService } from '../../../../core/services/chess-game.service';
 
 @Component({
   selector: 'app-checkmate-modal',
@@ -7,12 +12,9 @@ import { Piece, PieceColor } from '../../../../shared/types/chess.types';
   styleUrls: ['./checkmate-modal.component.scss'],
 })
 export class CheckmateModalComponent {
+  chessGameService = inject(ChessGameService);
   isVisible = signal(false);
   winner = signal<PieceColor | null>(null);
-  capturedPieces = signal<{ [key in PieceColor]: Piece[] }>({
-    [PieceColor.White]: [],
-    [PieceColor.Black]: [],
-  });
 
   retry(): void {
     console.log('Retrying game...');

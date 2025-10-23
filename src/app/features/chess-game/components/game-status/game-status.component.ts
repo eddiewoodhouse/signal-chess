@@ -1,11 +1,12 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ChessGameService } from '../../../../core/services/chess-game.service';
 import { GameState, PieceColor } from '../../../../shared/types/chess.types';
+import { CheckmateModalComponent } from "../checkmate-modal/checkmate-modal.component";
 
 @Component({
   selector: 'app-game-status',
   standalone: true,
-  imports: [],
+  imports: [CheckmateModalComponent],
   templateUrl: './game-status.component.html',
   styleUrl: './game-status.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

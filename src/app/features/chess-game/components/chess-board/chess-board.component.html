@@ -1,49 +1,46 @@
 <div class="chessboard">
   @for (row of board(); track row; let rowIndex = $index) {
-    <div class="board-row">
-      @for (piece of row; track piece; let colIndex = $index) {
-        <div
-          class="square"
-          [class.selected]="isSquareSelected(rowIndex, colIndex)"
-          [class.possible-move]="isPossibleMove(rowIndex, colIndex)"
-          [class.capture]="isPossibleCapture(rowIndex, colIndex)"
-          [class.check]="isInCheck(rowIndex, colIndex)"
-          [class.last-move]="isLastMove(rowIndex, colIndex)"
-          (click)="onSquareClick({ row: rowIndex, col: colIndex })"
-        >
-          @if (piece) {
-            <div 
-              class="piece"
-              [class.animated]="isAnimating(rowIndex, colIndex)"
-              [style.transform]="getPieceTransform(rowIndex, colIndex)"
-            >
-              <img
-                [src]="getPieceImage(piece.type, piece.color)"
-                alt="{{ piece.color }} {{ piece.type }}"
-                [class.captured]="isCaptured(rowIndex, colIndex)"
-              />
-            </div>
-          }
-        </div>
+  <div class="board-row">
+    @for (piece of row; track piece; let colIndex = $index) {
+    <div
+      class="square"
+      [class.selected]="isSquareSelected(rowIndex, colIndex)"
+      [class.possible-move]="isPossibleMove(rowIndex, colIndex)"
+      [class.capture]="isPossibleCapture(rowIndex, colIndex)"
+      [class.check]="isInCheck(rowIndex, colIndex)"
+      [class.last-move]="isLastMove(rowIndex, colIndex)"
+      (click)="onSquareClick({ row: rowIndex, col: colIndex })"
+    >
+      @if (piece) {
+      <div
+        class="piece"
+        [class.animated]="isAnimating(rowIndex, colIndex)"
+        [style.transform]="getPieceTransform(rowIndex, colIndex)"
+      >
+        <img
+          [src]="chessGameService.getPieceImage(piece.type, piece.color)"
+          alt="{{ piece.color }} {{ piece.type }}"
+          [class.captured]="isCaptured(rowIndex, colIndex)"
+        />
+      </div>
       }
     </div>
+    }
+  </div>
   }
 </div>
 
 @if (showPromotionDialog()) {
-  <div class="promotion-dialog">
-    <div class="pieces">
-      @for (pieceType of promotionPieces; track pieceType) {
-        <div 
-          class="piece-option" 
-          (click)="onPromotionSelect(pieceType)"
-        >
-          <img 
-            [src]="getPieceImage(pieceType, currentPlayer())" 
-            [alt]="pieceType"
-          />
-        </div>
-      }
+<div class="promotion-dialog">
+  <div class="pieces">
+    @for (pieceType of promotionPieces; track pieceType) {
+    <div class="piece-option" (click)="onPromotionSelect(pieceType)">
+      <img
+        [src]="chessGameService.getPieceImage(pieceType, currentPlayer())"
+        [alt]="pieceType"
+      />
     </div>
+    }
   </div>
+</div>
 }

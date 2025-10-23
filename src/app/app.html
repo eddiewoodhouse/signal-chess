@@ -1,10 +1,14 @@
 <main class="app-container">
-  <section class="game-section">
+  <!-- <header class="game-header" role="banner">
     <h1>Signal Chess</h1>
     <app-game-status></app-game-status>
+    <app-theme-switcher></app-theme-switcher>
+  </header> -->
+  <section class="game-section" role="main">
     <app-chess-board></app-chess-board>
   </section>
-  <section class="settings-section">
+  <footer class="game-header" role="banner">
+    <app-game-status></app-game-status>
     <app-theme-switcher></app-theme-switcher>
-  </section>
+  </footer>
 </main>

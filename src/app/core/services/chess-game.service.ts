@@ -579,4 +579,8 @@ export class ChessGameService {
 
     return moves;
   }
+
+  getPieceImage(type: string, color: PieceColor): string {
+    return `/assets/pieces/${color.toLowerCase()}_${type.toLowerCase()}.svg`;
+  }
 }

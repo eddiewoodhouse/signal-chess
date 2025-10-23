@@ -97,9 +97,6 @@ export class ChessBoardComponent {
     return `translate(${translateX}px, ${translateY}px)`;
   }
 
-  protected getPieceImage(type: string, color: PieceColor): string {
-    return `/assets/pieces/${color.toLowerCase()}_${type.toLowerCase()}.svg`;
-  }
 
   protected onSquareClick(coords: Coords): void {
     // If promotion dialog is open, ignore clicks outside
