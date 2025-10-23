@@ -1,0 +1,18 @@
+<div class="game-status">
+    <h2>Current Player: {{ currentPlayer() === PieceColor.White ? 'White' : 'Black' }}</h2>
+    @if (isGameOver()) {
+        <div class="game-over">
+            <h3>Game Over!</h3>
+            @if (winner()) {
+                <p>Winner: {{ winner() === PieceColor.White ? 'White' : 'Black' }}</p>
+            } @else {
+                <p>Draw!</p>
+            }
+            <button (click)="resetGame()">New Game</button>
+        </div>
+    } @if (gameState() === GameState.Check) {
+        <div class="check-status">
+            <p>Check! Protect your King!</p>
+        </div>
+    }
+</div>

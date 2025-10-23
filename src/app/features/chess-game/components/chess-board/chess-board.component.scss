@@ -1,0 +1,156 @@
+.chessboard {
+    display: grid;
+    grid-template-columns: repeat(8, 60px);
+    grid-template-rows: repeat(8, 60px);
+    border: 2px solid #333;
+    position: relative;
+}
+
+.board-row {
+    display: contents;
+}
+
+.square {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2em;
+    cursor: pointer;
+    position: relative;
+    transition: background-color 0.2s ease;
+
+    &:nth-child(odd of .board-row:nth-child(odd) > &),
+    &:nth-child(even of .board-row:nth-child(even) > &) {
+        background-color: #f0d9b5;
+    }
+
+    &:nth-child(even of .board-row:nth-child(odd) > &),
+    &:nth-child(odd of .board-row:nth-child(even) > &) {
+        background-color: #b58863;
+    }
+
+    &.selected {
+        background-color: rgba(255, 255, 0, 0.5) !important;
+        box-shadow: inset 0 0 0 2px #ffd700;
+    }
+
+    &.check {
+        background-color: rgba(255, 0, 0, 0.3) !important;
+    }
+
+    &.last-move {
+        background-color: rgba(255, 255, 0, 0.2) !important;
+    }
+
+    &.possible-move {
+        &::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background-color: rgba(0, 128, 0, 0.3);
+            animation: pulse 1.5s infinite;
+        }
+
+        &:hover {
+            background-color: rgba(144, 238, 144, 0.6) !important;
+        }
+
+        &.capture::before {
+            width: 40px;
+            height: 40px;
+            border: 2px solid rgba(255, 0, 0, 0.5);
+            background-color: transparent;
+        }
+    }
+
+    .piece {
+        width: 50px;
+        height: 50px;
+        position: absolute;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        pointer-events: none;
+        
+        &.animated {
+            z-index: 10;
+        }
+
+        &.captured {
+            opacity: 0;
+            transform: scale(0.5);
+        }
+
+        img {
+            width: 100%;
+            height: 100%;
+            transition: transform 0.2s ease;
+        }
+
+        &:not(.animated) img:hover {
+            transform: scale(1.1);
+        }
+    }
+}
+
+// Animations
+@keyframes pulse {
+    0% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0.6;
+    }
+    50% {
+        transform: translate(-50%, -50%) scale(1.2);
+        opacity: 0.4;
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0.6;
+    }
+}
+
+// Promotion dialog
+.promotion-dialog {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 100;
+
+    .pieces {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+
+        .piece-option {
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: 2px solid transparent;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+
+            &:hover {
+                background-color: #f0f0f0;
+                border-color: #666;
+            }
+
+            img {
+                width: 50px;
+                height: 50px;
+            }
+        }
+    }
+}
