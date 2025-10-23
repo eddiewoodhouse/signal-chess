@@ -1,4 +1,4 @@
-import { Injectable, computed, signal } from '@angular/core';
+import { Injectable, computed, signal, inject } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import {
   Board,
@@ -10,11 +10,14 @@ import {
   PieceColor,
   PieceType,
 } from '../../shared/types/chess.types';
+import { ThemeService } from './theme.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ChessGameService {
+  private readonly themeService = inject(ThemeService);
+
   // Observable for animations
   private moveAnimation = new BehaviorSubject<Move | null>(null);
   private readonly initialBoard: Board = [

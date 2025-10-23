@@ -1,15 +1,41 @@
-.game-container {
+.app-container {
+  display: flex;
+  min-height: 100vh;
+  padding: 2rem;
+  gap: 2rem;
+  background: var(--color-background);
+  background-image: var(--background-pattern);
+  font-family: var(--font-family);
+}
+
+.game-section {
+  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  min-height: 100vh;
-  padding: 2rem;
-  background-color: #f5f5f5;
 
   h1 {
     margin-bottom: 1rem;
-    font-size: 2.5em;
-    color: #333;
+    font-size: 2.5rem;
+    color: var(--color-text);
+    font-weight: 600;
+  }
+}
+
+.settings-section {
+  width: 300px;
+  flex-shrink: 0;
+
+  @media (max-width: 1024px) {
+    width: 100%;
+    max-width: 300px;
+  }
+
+  @media (max-width: 768px) {
+    position: fixed;
+    bottom: 1rem;
+    right: 1rem;
+    z-index: 10;
   }
 }

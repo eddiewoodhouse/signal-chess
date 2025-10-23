@@ -1,9 +1,18 @@
 .chessboard {
     display: grid;
-    grid-template-columns: repeat(8, 60px);
-    grid-template-rows: repeat(8, 60px);
-    border: 2px solid #333;
+    grid-template-columns: repeat(8, minmax(48px, 64px));
+    grid-template-rows: repeat(8, minmax(48px, 64px));
+    border: 4px solid var(--color-secondary);
+    border-radius: 8px;
     position: relative;
+    box-shadow: 
+        0 1px 2px rgba(0, 0, 0, 0.04),
+        0 2px 4px rgba(0, 0, 0, 0.04),
+        0 4px 8px rgba(0, 0, 0, 0.04),
+        0 8px 16px rgba(0, 0, 0, 0.04);
+    background: var(--color-secondary);
+    padding: 4px;
+    gap: 2px;
 }
 
 .board-row {
@@ -11,19 +20,22 @@
 }
 
 .square {
-    width: 60px;
-    height: 60px;
+    width: 100%;
+    height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 2em;
+    font-size: calc(min(48px, 64px) * 0.6);
     cursor: pointer;
     position: relative;
-    transition: background-color 0.2s ease;
+    transition: all 0.2s ease;
+    border-radius: 4px;
+    border: 1px solid var(--color-squareBorder, transparent);
 
     &:nth-child(odd of .board-row:nth-child(odd) > &),
     &:nth-child(even of .board-row:nth-child(even) > &) {
-        background-color: #f0d9b5;
+        background: var(--color-lightSquare);
+        color: var(--color-pieceDark);
     }
 
     &:nth-child(even of .board-row:nth-child(odd) > &),

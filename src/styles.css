@@ -1,0 +1,44 @@
+/* Import theme fonts */
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fauna+One&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@200;300;400;500;600;700&display=swap');
+
+:root {
+  /* Default theme values will be overridden by ThemeService */
+  --color-primary: #0891b2;
+  --color-secondary: #164e63;
+  --color-accent: #38bdf8;
+  --color-background: #ecfeff;
+  --color-surface: #f0fdfa;
+  --color-text: #164e63;
+  --font-family: 'Quicksand', sans-serif;
+  --background-pattern: none;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-family);
+  color: var(--color-text);
+  background-color: var(--color-background);
+  background-image: var(--background-pattern);
+}
+
+button {
+  font-family: var(--font-family);
+  background-color: var(--color-primary);
+  color: var(--color-surface);
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+button:hover {
+  background-color: var(--color-secondary);
+}
+
+/* Add more global theme-aware styles as needed */
