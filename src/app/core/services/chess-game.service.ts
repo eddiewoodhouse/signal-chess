@@ -338,11 +338,11 @@ export class ChessGameService {
       for (let col = 0; col < 8; col++) {
         const piece = board[row][col];
         if (piece && piece.color !== color) {
-          const rawMoves = this.calculateRawMoves(piece, { row, col }, board);
+          const moves = this.calculateRawMoves(piece, { row, col }, board);
           if (
-            rawMoves.some(
-              (move: Move) =>
-                move.to.row === kingPos?.row && move.to.col === kingPos?.col
+            moves.some(
+              (move) =>
+                move.to.row === kingPos!.row && move.to.col === kingPos!.col
             )
           ) {
             return true;
@@ -360,8 +360,8 @@ export class ChessGameService {
       for (let col = 0; col < 8; col++) {
         const piece = board[row][col];
         if (piece && piece.color === color) {
-          const validMoves = this.calculateValidMoves(piece, { row, col });
-          if (validMoves.length > 0) {
+          const moves = this.calculateValidMoves(piece, { row, col });
+          if (moves.length > 0) {
             return true;
           }
         }
@@ -384,15 +384,21 @@ export class ChessGameService {
     const color = move.piece.color;
     let kingPos: Coords | null = null;
 
-    for (let row = 0; row < 8; row++) {
-      for (let col = 0; col < 8; col++) {
-        const piece = tempBoard[row][col];
-        if (piece?.type === PieceType.King && piece.color === color) {
-          kingPos = { row, col };
-          break;
+    // If moving the king, use destination coordinates
+    if (move.piece.type === PieceType.King) {
+      kingPos = move.to;
+    } else {
+      // Otherwise, find the king's current position
+      for (let row = 0; row < 8; row++) {
+        for (let col = 0; col < 8; col++) {
+          const piece = tempBoard[row][col];
+          if (piece?.type === PieceType.King && piece.color === color) {
+            kingPos = { row, col };
+            break;
+          }
         }
+        if (kingPos) break;
       }
-      if (kingPos) break;
     }
 
     if (!kingPos) return true; // Should never happen in a valid game
@@ -402,15 +408,10 @@ export class ChessGameService {
       for (let col = 0; col < 8; col++) {
         const piece = tempBoard[row][col];
         if (piece && piece.color !== color) {
-          const attacks = this.calculateRawMoves(
-            piece,
-            { row, col },
-            tempBoard
-          );
+          const moves = this.calculateRawMoves(piece, { row, col }, tempBoard);
           if (
-            attacks.some(
-              (attack) =>
-                attack.to.row === kingPos?.row && attack.to.col === kingPos?.col
+            moves.some(
+              (m) => m.to.row === kingPos!.row && m.to.col === kingPos!.col
             )
           ) {
             return true;
