@@ -5,7 +5,6 @@
     <h3>Captured Pieces</h3>
     <div class="captured-pieces">
       <div>
-        <h4>White</h4>
         @for (piece of chessGameService.capturedPieces().white; track
         piece.type) {
         <img
@@ -15,7 +14,6 @@
         }
       </div>
       <div>
-        <h4>Black</h4>
         @for (piece of chessGameService.capturedPieces().black; track
         piece.type) {
         <img

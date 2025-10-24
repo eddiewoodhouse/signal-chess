@@ -1,18 +1,18 @@
 <h3>Captured Pieces</h3>
 <div class="captured-pieces">
   <div>
-    <h4>White</h4>
     @for (piece of chessGameService.capturedPieces().white; track piece.type) {
     <img
+      class="captured-piece"
       [src]="chessGameService.getPieceImage(piece.type, piece.color)"
       alt="{{ piece.color }} {{ piece.type }}"
     />
     }
   </div>
   <div>
-    <h4>Black</h4>
     @for (piece of chessGameService.capturedPieces().black; track piece.type) {
     <img
+      class="captured-piece"
       [src]="chessGameService.getPieceImage(piece.type, piece.color)"
       alt="{{ piece.color }} {{ piece.type }}"
     />

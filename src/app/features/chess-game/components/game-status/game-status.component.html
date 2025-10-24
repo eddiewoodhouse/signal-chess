@@ -1,13 +1,16 @@
 <div class="game-status">
   <div class="status-header">
-    <h2>Current Player:</h2>
+    <p>{{ currentPlayer() }}'s turn</p>
     @if(currentPlayer() === PieceColor.White) {
     <img
+      class="current-player-chesspiece"
       [src]="chessGameService.getPieceImage('pawn', 'white')"
       alt="white
     chesspiece"
     />
-    } @else {<img
+    } @else {
+    <img
+      class="current-player-chesspiece"
       [src]="chessGameService.getPieceImage('pawn', 'black')"
       alt="white chesspiece"
     />}

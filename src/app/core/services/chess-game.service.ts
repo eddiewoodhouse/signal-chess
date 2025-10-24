@@ -142,7 +142,7 @@ export class ChessGameService {
   );
 
   readonly isCheckmate = computed(() => {
-    return this._gameState() === GameState.Checkmate
+    return this._gameState() === GameState.Checkmate;
   });
 
   readonly isStalemate = computed(() => {
@@ -273,7 +273,9 @@ export class ChessGameService {
       // Determine the game state based on check status and available moves
       if (!hasValidMoves) {
         // If no valid moves are available
-        this._gameState.set(isInCheck ? GameState.Checkmate : GameState.Stalemate);
+        this._gameState.set(
+          isInCheck ? GameState.Checkmate : GameState.Stalemate
+        );
       } else {
         // If valid moves are available
         this._gameState.set(isInCheck ? GameState.Check : GameState.Active);
@@ -608,6 +610,8 @@ export class ChessGameService {
   }
 
   getPieceImage(type: PieceType | string, color: PieceColor | string): string {
-    return `/assets/pieces/${color.toLowerCase()}_${type.toLowerCase()}.svg`;
+    if (type && color)
+      return `/assets/pieces/${color.toLowerCase()}_${type.toLowerCase()}.svg`;
+    return '';
   }
 }

@@ -10,6 +10,10 @@
     color: #333;
     margin-bottom: 10px;
   }
+  p {
+    color: #333;
+    margin: auto;
+  }
 
   .game-over {
     margin-top: 20px;
@@ -46,5 +50,8 @@
   }
   .status-header {
     display: flex;
+  }
+  .current-player-chesspiece {
+    margin-left: 0.5rem;
   }
 }
