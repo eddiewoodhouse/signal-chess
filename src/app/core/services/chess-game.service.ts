@@ -142,11 +142,11 @@ export class ChessGameService {
   );
 
   readonly isCheckmate = computed(() => {
-    return this.isInCheck() && !this.hasAnyValidMoves(this._currentPlayer());
+    return this._gameState() === GameState.Checkmate
   });
 
   readonly isStalemate = computed(() => {
-    return !this.isInCheck() && !this.hasAnyValidMoves(this._currentPlayer());
+    return this._gameState() === GameState.Stalemate;
   });
 
   // Actions
@@ -266,18 +266,17 @@ export class ChessGameService {
         current === PieceColor.White ? PieceColor.Black : PieceColor.White
       );
 
-      // Check for check/checkmate
+      // Check game state: checkmate, stalemate, or check
+      const hasValidMoves = this.hasAnyValidMoves(this._currentPlayer());
       const isInCheck = this.isKingInCheck(this._currentPlayer());
-      if (isInCheck) {
-        const hasValidMoves = this.hasAnyValidMoves(this._currentPlayer());
-        this._gameState.set(
-          hasValidMoves ? GameState.Check : GameState.Checkmate
-        );
+
+      // Determine the game state based on check status and available moves
+      if (!hasValidMoves) {
+        // If no valid moves are available
+        this._gameState.set(isInCheck ? GameState.Checkmate : GameState.Stalemate);
       } else {
-        const hasValidMoves = this.hasAnyValidMoves(this._currentPlayer());
-        this._gameState.set(
-          hasValidMoves ? GameState.Active : GameState.Stalemate
-        );
+        // If valid moves are available
+        this._gameState.set(isInCheck ? GameState.Check : GameState.Active);
       }
 
       // End game if checkmate or stalemate
@@ -484,8 +483,36 @@ export class ChessGameService {
         });
 
         // En passant
-        if (piece.lastMoveWasDoublePawn) {
-          // Logic for en passant
+        // Check if we're on the correct rank for en passant (5th rank for white, 4th for black)
+        if (coords.row === (piece.color === PieceColor.White ? 3 : 4)) {
+          const lastMove = this._lastMove();
+          // Check for adjacent enemy pawns that just made a double move
+          [-1, 1].forEach((offset) => {
+            const targetCol = coords.col + offset;
+            if (isWithinBounds(coords.row, targetCol)) {
+              const adjacentPiece = board[coords.row][targetCol];
+              // Check if the adjacent piece is an enemy pawn that just moved two squares
+              if (
+                adjacentPiece?.type === PieceType.Pawn &&
+                adjacentPiece.color !== piece.color &&
+                lastMove?.piece.type === PieceType.Pawn &&
+                lastMove.piece.color === adjacentPiece.color &&
+                lastMove.from.col === targetCol &&
+                lastMove.to.col === targetCol &&
+                Math.abs(lastMove.from.row - lastMove.to.row) === 2 &&
+                lastMove.to.row === coords.row
+              ) {
+                // Add en passant capture move
+                moves.push({
+                  from: coords,
+                  to: { row: coords.row + direction, col: targetCol },
+                  type: MoveType.EnPassant,
+                  piece,
+                  capturedPiece: adjacentPiece,
+                });
+              }
+            }
+          });
         }
         break;
       }

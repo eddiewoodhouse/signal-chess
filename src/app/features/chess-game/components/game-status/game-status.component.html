@@ -13,10 +13,15 @@
     />}
   </div>
 
-  @if (isGameOver()) {
+  @if (chessGameService.isCheckmate()) {
   <div class="check-status">
     <p>Checkmate!</p>
-    <app-checkmate-modal />
+    <app-checkmate-modal [gameResolution]="'Checkmate!'" />
+  </div>
+  } @if (chessGameService.isStalemate()) {
+  <div class="check-status">
+    <p>Stalemate!</p>
+    <app-checkmate-modal [gameResolution]="'Stalemate!'" />
   </div>
   } @if (gameState() === GameState.Check) {
   <div class="check-status">
