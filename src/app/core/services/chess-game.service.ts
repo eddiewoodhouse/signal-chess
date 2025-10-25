@@ -316,6 +316,21 @@ export class ChessGameService {
     // Additional logic to trigger UI updates or navigation
   }
 
+  private isSquareUnderAttack(square: Coords, defendingColor: PieceColor, board: Board): boolean {
+    for (let row = 0; row < 8; row++) {
+      for (let col = 0; col < 8; col++) {
+        const piece = board[row][col];
+        if (piece && piece.color !== defendingColor) {
+          const moves = this.calculateRawMoves(piece, { row, col }, board, true);
+          if (moves.some(move => move.to.row === square.row && move.to.col === square.col)) {
+            return true;
+          }
+        }
+      }
+    }
+    return false;
+  }
+
   private isKingInCheck(color: PieceColor): boolean {
     // Find king position
     const board = this._board();
@@ -339,7 +354,8 @@ export class ChessGameService {
       for (let col = 0; col < 8; col++) {
         const piece = board[row][col];
         if (piece && piece.color !== color) {
-          const moves = this.calculateRawMoves(piece, { row, col }, board);
+          // Calculate raw moves without castling to avoid infinite recursion
+          const moves = this.calculateRawMoves(piece, { row, col }, board, true);
           if (
             moves.some(
               (move) =>
@@ -435,7 +451,8 @@ export class ChessGameService {
   private calculateRawMoves(
     piece: Piece,
     coords: Coords,
-    board: Board
+    board: Board,
+    skipCastling: boolean = false
   ): Move[] {
     const moves: Move[] = [];
 
@@ -455,6 +472,20 @@ export class ChessGameService {
           });
         }
       }
+    };
+
+    const isPathClear = (fromRow: number, fromCol: number, toRow: number, toCol: number): boolean => {
+      const rowStep = fromRow === toRow ? 0 : (toRow - fromRow) / Math.abs(toRow - fromRow);
+      const colStep = fromCol === toCol ? 0 : (toCol - fromCol) / Math.abs(toCol - fromCol);
+      let currentRow = fromRow + rowStep;
+      let currentCol = fromCol + colStep;
+      
+      while (currentRow !== toRow || currentCol !== toCol) {
+        if (board[currentRow][currentCol]) return false;
+        currentRow += rowStep;
+        currentCol += colStep;
+      }
+      return true;
     };
 
     switch (piece.type) {
@@ -479,6 +510,29 @@ export class ChessGameService {
         [-1, 1].forEach((offset) => {
           const targetCol = coords.col + offset;
           const target = board[coords.row + direction]?.[targetCol];
+          
+          if (target && target.color !== piece.color) {
+            addMove(coords.row + direction, targetCol, MoveType.Capture);
+          }
+
+          // En Passant
+          const lastMove = this._lastMove();
+          if (lastMove && 
+              lastMove.piece.type === PieceType.Pawn && 
+              lastMove.piece.color !== piece.color &&
+              lastMove.from.row === (piece.color === PieceColor.White ? 1 : 6) && // Started from initial position
+              lastMove.to.row === coords.row && // Landed next to our pawn
+              lastMove.to.col === targetCol && // Is in the target column
+              Math.abs(lastMove.to.row - lastMove.from.row) === 2) { // Was a double move
+            // Add en passant capture
+            moves.push({
+              from: coords,
+              to: { row: coords.row + direction, col: targetCol },
+              type: MoveType.EnPassant,
+              piece,
+              capturedPiece: lastMove.piece
+            });
+          }
           if (target && target.color !== piece.color) {
             addMove(coords.row + direction, targetCol, MoveType.Capture);
           }
@@ -599,8 +653,54 @@ export class ChessGameService {
         });
 
         // Castling logic
-        if (!piece.hasMoved) {
-          // Logic for castling
+        if (!skipCastling && !piece.hasMoved && !this.isKingInCheck(piece.color)) {
+          const row = piece.color === PieceColor.White ? 7 : 0;
+          
+          // Kingside castling
+          const kingRook = board[row][7];
+          if (kingRook?.type === PieceType.Rook && !kingRook.hasMoved) {
+            if (isPathClear(row, coords.col, row, 7)) {
+              // Check if squares between are not under attack
+              const canCastle = [1, 2].every(offset => {
+                const tempBoard = board.map(row => [...row]);
+                tempBoard[row][coords.col + offset] = piece;
+                tempBoard[row][coords.col] = null;
+                return !this.isSquareUnderAttack({ row, col: coords.col + offset }, piece.color, tempBoard);
+              });
+
+              if (canCastle) {
+                moves.push({
+                  from: coords,
+                  to: { row, col: coords.col + 2 },
+                  type: MoveType.Castle,
+                  piece,
+                });
+              }
+            }
+          }
+
+          // Queenside castling
+          const queenRook = board[row][0];
+          if (queenRook?.type === PieceType.Rook && !queenRook.hasMoved) {
+            if (isPathClear(row, coords.col, row, 0)) {
+              // Check if squares between are not under attack
+              const canCastle = [-1, -2].every(offset => {
+                const tempBoard = board.map(row => [...row]);
+                tempBoard[row][coords.col + offset] = piece;
+                tempBoard[row][coords.col] = null;
+                return !this.isSquareUnderAttack({ row, col: coords.col + offset }, piece.color, tempBoard);
+              });
+
+              if (canCastle) {
+                moves.push({
+                  from: coords,
+                  to: { row, col: coords.col - 2 },
+                  type: MoveType.Castle,
+                  piece,
+                });
+              }
+            }
+          }
         }
         break;
       }
